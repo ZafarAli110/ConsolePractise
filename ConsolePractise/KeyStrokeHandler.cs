@@ -6,8 +6,8 @@ namespace ConsolePractise
     public delegate void QuitDelegate();
     public class KeyStrokeHandler
     {
-        public KeyPressDelegate OnKey;
-        public QuitDelegate OnQuitting;
+        public event KeyPressDelegate OnKey;  
+        public event QuitDelegate OnQuitting;
         public void Run() {
             Console.WriteLine("KeyStroke Handler is running.Plz press 'q' to quit.");
             

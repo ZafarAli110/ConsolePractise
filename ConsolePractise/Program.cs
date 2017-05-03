@@ -21,21 +21,20 @@ namespace ConsolePractise
             //}
 
             var keyStrokeHandler = new KeyStrokeHandler();
-        //  keyStrokeHandler.OnKey = new KeyPressDelegate(GotKey);
-            keyStrokeHandler.OnKey = GotKey;  //just a shorter syntax..doing same thing as above
-            keyStrokeHandler.OnQuitting = Quitting;
+            keyStrokeHandler.OnKey += GotKey;  
+            keyStrokeHandler.OnQuitting += Quitting;
 
             var bob = new QuitTracker { Name = "bob" };
-            keyStrokeHandler.OnQuitting += bob.QuitHandler;  //adding to the delegate invokation list
+            keyStrokeHandler.OnQuitting += bob.QuitHandler;  
 
             var sandy = new QuitTracker { Name = "sandy" };
             keyStrokeHandler.OnQuitting += sandy.QuitHandler;
 
-            keyStrokeHandler.OnQuitting -= Quitting;  //removing from the delegate invokation list
+            keyStrokeHandler.OnQuitting -= Quitting;  
 
-            keyStrokeHandler.OnQuitting(); //invoking OnQuitting delegate which will invoke all the methods which are added in our delegate invokation list
-
-            keyStrokeHandler.OnQuitting = null;  //setting delegate invokation list to null which means,now it contains no methods 
+            // To overcome our previous problems with public delegate now we introduce events by using event now the public api of our class no
+            // supports to set the value of our delegate we can only add or the delegate but we cannot set them to null to we cannot directly
+            // invoke the delegate.
 
             keyStrokeHandler.Run();
         }
