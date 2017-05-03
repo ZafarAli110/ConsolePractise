@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Drawing;
 
 public interface ICar
@@ -12,4 +13,5 @@ public interface ICar
     string CompanyName { get; }
     Color Color { get; set; }
 
+    event EventHandler CarStopped;
 }

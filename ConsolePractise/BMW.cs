@@ -19,7 +19,8 @@ public class BMW : BaseCar
 
     public override void PressBrake(double pressure)
     {
-        Console.WriteLine("Stopping....."); ;
+        Console.WriteLine("Stopping.....");
+        base.FireCarStoppedEvent(); //calling the protected method of the base class
     }
 
     
