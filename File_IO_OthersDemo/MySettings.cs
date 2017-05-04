@@ -29,7 +29,7 @@ namespace File_IO_OthersDemo
         }
 
 
-        private static string SettingsFolder  //create settings folder 
+        private static string SettingsFolder  //creating settings folder 
         {
             get
             {
@@ -48,51 +48,68 @@ namespace File_IO_OthersDemo
             }
         }
 
-        public void Save()
-        {
-
-            Stream stream = File.Create(SettingsFile);  //creating a settings file
-            //since stream works on byte[] and we dont want to work at that low level so we can use StreamWriter on top of stream
-            StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
-
-            writer.WriteLine(MyNumber);
-            writer.WriteLine(MyString);
-
-            writer.Close();
-            stream.Close();
-        }
-
-        public static MySettings Load()
-        {
-            if (!File.Exists(SettingsFile)) //if there is no settings file then return the default settingss
-            {
-                return DefaultSettings;
-            }
-            Stream stream = File.OpenRead(SettingsFile);
-            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-
-            string firstLine = reader.ReadLine();  //reads the first line
-            string secondLine = reader.ReadLine();  //reads the second line
-
-            reader.Close();
-            stream.Close();
-
-            return new MySettings
-            {
-                MyNumber = int.Parse(firstLine),
-                MyString = secondLine
-                
-            };
-        }
-
-
-        private static string SettingsFile  //Returned a settings file
+        private static string SettingsFile  //Returned a settings file named 'settings.txt' in a SettingsFolder
         {
             get
             {
                 return Path.Combine(SettingsFolder, "settings.txt");
             }
         }
+
+        public void Save()
+        {
+
+            using (Stream stream = File.Create(SettingsFile))   //creating a file named 'settings.txt'
+            //since stream works on byte[] and we dont want to work at that low level so we can use StreamWriter on top of stream
+            using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+            {
+
+                writer.WriteLine(MyNumber);
+                writer.WriteLine(MyString);
+
+                //writer.Close();   //since we are using the USING statement so we dont need to close the stream explicitly
+                //stream.Close();
+            }
+        }
+
+        public static MySettings Load()
+        {
+            if (!File.Exists(SettingsFile)) //if there is no settings file then return the default settings
+            {
+                return DefaultSettings;
+            }
+            using (Stream stream = File.OpenRead(SettingsFile))
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                try
+                {
+                    string firstLine = reader.ReadLine();  //reads the first line
+                    string secondLine = reader.ReadLine();  //reads the second line
+
+                    //reader.Close();
+                    //stream.Close();
+
+                    return new MySettings
+                    {
+                        MyNumber = int.Parse(firstLine), //we are parsing here and if the first line of file isnt int then this line will throw an exception that's why trycatch is used
+                        MyString = secondLine
+
+                    };
+                }
+                catch (FormatException)  //if file format is corrupt or the file is corrupt
+                {
+                    stream.Close();
+                    File.Delete(SettingsFile);  //delete the corrupt file
+
+                    return DefaultSettings;
+                }
+
+            }
+
+        }
+
+
+
 
     }
 }
