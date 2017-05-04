@@ -13,6 +13,7 @@ namespace File_IO_OthersDemo
 {
     public class MySettings
     {
+        [XmlElement("Number")]
         public int MyNumber { get; set; }
         public string MyString { get; set; }
 
@@ -53,7 +54,7 @@ namespace File_IO_OthersDemo
         {
             get
             {
-             // return Path.Combine(SettingsFolder, "settings.txt");  //we no longer creating a txt file bcoz we are working with the XmlSerializer
+                // return Path.Combine(SettingsFolder, "settings.txt");  //we no longer creating a txt file bcoz we are working with the XmlSerializer
                 return Path.Combine(SettingsFolder, "settings.xml");
             }
         }
@@ -77,11 +78,11 @@ namespace File_IO_OthersDemo
             {
                 // inorder to acheive persistance in our application we can replace StreamWriter with XmlSerializer 
                 // by doing this we no longer concern with the type of our data e.g int or string or etc...
-                // Imp Note :- XmlSerializer will serialize the PUBLIC properties of the Object...we can provide the type of the object
+                // Imp Note :- XmlSerializer will serialize all the PUBLIC properties of the Object...we can provide the type of the object
                 // and then the XmlSerializer uses Reflection to determine the meta data and types of all the public properties of the 
                 // object and then serialized them..
 
-                XmlSerializer ser = new XmlSerializer(this.GetType());
+                XmlSerializer ser = new XmlSerializer(typeof(MySettings));  //or alternatively this.GetType() instead of typeof
                 ser.Serialize(stream, this);
 
             }
@@ -121,9 +122,18 @@ namespace File_IO_OthersDemo
             //}
             #endregion
             {
-                
-                XmlSerializer ser = new XmlSerializer(typeof(MySettings));
-                return (MySettings)ser.Deserialize(stream);  //note : Xml Deserializer returns an object so need to cast it approperiatly
+
+                try
+                {
+                    XmlSerializer ser = new XmlSerializer(typeof(MySettings));
+                    return (MySettings)ser.Deserialize(stream);  //note : Xml Deserializer returns an object so we need to cast it approperiatly
+                }
+                catch (InvalidOperationException x)   //if settings.xml file is corrupted 
+                {
+                    stream.Close();
+                    File.Delete(SettingsFile);
+                    return DefaultSettings;
+                }   
             }
         }
 
