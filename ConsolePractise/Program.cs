@@ -7,42 +7,43 @@ namespace ConsolePractise
     {
         static void Main(string[] args)
         {
-            ICar[] cars = {
-                            new BMW { Color = Color.Black },
-                            new Toyota { Color = Color.Silver}
-                          };
+            //ICar[] cars = {
+            //                new BMW { Color = Color.Black },
+            //                new Toyota { Color = Color.Silver}
+            //              };
 
-            cars[0].CarStopped += OnCarStopped;  // same as cars[0].CarStopped += new EventHandler(OnCarStopped) ...where cars[0] = BMW 
+            ////Wiring up Event with a method
+            //cars[0].OnCarStopped += OnCarStop;  // same as cars[0].OnCarStopped += new EventHandler(OnCarStop) ...where cars[0] = BMW 
 
-            foreach (ICar car in cars)
-            {
-                PrintCarInfo(car);
-                car.Start();
-                car.PressAccelator(5);
-                car.PressBrake(6);
-                Console.WriteLine();
-            }
+            //foreach (ICar car in cars)
+            //{
+            //    PrintCarInfo(car);
+            //    car.Start();
+            //    car.PressAccelator(5);
+            //    car.PressBrake(6);
+            //    Console.WriteLine();
+            //}
 
-            //var keyStrokeHandler = new KeyStrokeHandler();
-            //keyStrokeHandler.OnKey += GotKey;  
-            //keyStrokeHandler.OnQuitting += Quitting;
+            var keyStrokeHandler = new KeyStrokeHandler();
+            keyStrokeHandler.OnKey += GotKey;
+            keyStrokeHandler.OnQuitting += Quitting;
 
-            //var bob = new QuitTracker { Name = "bob" };
-            //keyStrokeHandler.OnQuitting += bob.QuitHandler;  
+            var bob = new QuitTracker { Name = "bob" };
+            keyStrokeHandler.OnQuitting += bob.QuitHandler;
 
-            //var sandy = new QuitTracker { Name = "sandy" };
-            //keyStrokeHandler.OnQuitting += sandy.QuitHandler;
+            var sandy = new QuitTracker { Name = "sandy" };
+            keyStrokeHandler.OnQuitting += sandy.QuitHandler;
 
-            //keyStrokeHandler.OnQuitting -= Quitting;  
+            keyStrokeHandler.OnQuitting -= Quitting;
 
             // To overcome our previous problems with public delegate now we introduce events by using event now the public api of our class no
-            // supports to set the value of our delegate we can only add or the delegate but we cannot set them to null to we cannot directly
+            // supports to set the value of our delegate we can only add or remove the delegate but we cannot set them to null to we cannot directly
             // invoke the delegate.
 
-           // keyStrokeHandler.Run();
+            keyStrokeHandler.Run();
         }
 
-        private static void OnCarStopped(object sender, EventArgs e)
+        private static void OnCarStop(object sender, EventArgs e)
         {
             Console.WriteLine($"CarStopping event of {sender} is fired");
         }

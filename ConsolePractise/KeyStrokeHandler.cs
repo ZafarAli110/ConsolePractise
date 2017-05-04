@@ -4,11 +4,14 @@ namespace ConsolePractise
 {
     public delegate void KeyPressDelegate(char key);
     public delegate void QuitDelegate();
+
     public class KeyStrokeHandler
     {
         public event KeyPressDelegate OnKey;  
         public event QuitDelegate OnQuitting;
+
         public void Run() {
+
             Console.WriteLine("KeyStroke Handler is running.Plz press 'q' to quit.");
             
             while (true)

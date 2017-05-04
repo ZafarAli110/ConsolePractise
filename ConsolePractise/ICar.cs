@@ -13,5 +13,5 @@ public interface ICar
     string CompanyName { get; }
     Color Color { get; set; }
 
-    event EventHandler CarStopped;
+    event EventHandler OnCarStopped;
 }

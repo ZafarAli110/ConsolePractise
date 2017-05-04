@@ -28,11 +28,12 @@ public abstract class BaseCar : ICar
     public string CompanyName { get; private set; }
     public Color Color { get; set; }
 
-    public event EventHandler CarStopped;
+    public event EventHandler OnCarStopped;
 
+    // Invoking Event
     protected void FireCarStoppedEvent()
     {
-        CarStopped?.Invoke(this,EventArgs.Empty);   // if null then null if not then Dot
+        OnCarStopped?.Invoke(this,EventArgs.Empty);   // if null then null if not then Dot
     }
 
 }
